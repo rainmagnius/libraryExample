@@ -2,19 +2,19 @@
 
 const Router = require('@koa/router');
 
-function authorRouter(db) {
+function authorRouter(controller) {
   const router = new Router({ prefix: '/author'});
 
   router.get('/', async (ctx) => {
-    ctx.body = await db.getAuthors(ctx.query);
+    ctx.body = await controller.getRows({ params: ctx.query});
   });
 
   router.post('/', async (ctx) => {
-    ctx.body = await db.addAuthor({ ...ctx.request.body });
+    ctx.body = await controller.addRow({ params: ctx.request.body });
   });
 
   router.patch('/:id', async (ctx) => {
-    ctx.body = await db.editAuthor({ id: ctx.params.id, ...ctx.request.body });
+    ctx.body = await controller.editRow({ id: ctx.params.id, params: ctx.request.body });
   });
 
   return router;

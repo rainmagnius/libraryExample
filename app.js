@@ -4,26 +4,32 @@ const config = require('config');
 const Koa = require('koa');
 const qs = require('koa-qs');
 const bodyparser = require('koa-body');
-const DBManager = require('./util/dbmanager');
+const DBHelper = require('./util/dbhelper');
+const AuthorController = require('./controller/author');
+const BookController = require('./controller/book');
 const BookRouter = require('./router/book');
 const AuthorRouter = require('./router/author');
-
 async function initApp() {
   const app = new Koa();
   qs(app);
   
   app.use(bodyparser())
 
-  const db = new DBManager(config.database);
-  await db.init();
+  const db = new DBHelper(config.database);
 
-  const bookRouter = BookRouter(db);
-  app.use(bookRouter.routes());
-  app.use(bookRouter.allowedMethods());
-
-  const authorRouter = AuthorRouter(db);
+  const authorController = new AuthorController(db);
+  await authorController.initTable();
+  
+  const authorRouter = AuthorRouter(authorController);
   app.use(authorRouter.routes());
   app.use(authorRouter.allowedMethods());
+
+  const bookController = new BookController(db);
+  await bookController.initTable();
+  
+  const bookRouter = BookRouter(bookController);
+  app.use(bookRouter.routes());
+  app.use(bookRouter.allowedMethods());
 
   app.listen(config.port, config.host);
   console.log(`Server is listening on: ${config.host}:${config.port}`);
