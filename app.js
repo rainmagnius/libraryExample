@@ -3,17 +3,18 @@
 const config = require('config');
 const Koa = require('koa');
 const qs = require('koa-qs');
-const bodyparser = require('koa-body');
+const serve = require('koa-static');
 const DBHelper = require('./util/dbhelper');
 const AuthorController = require('./controller/author');
 const BookController = require('./controller/book');
 const BookRouter = require('./router/book');
 const AuthorRouter = require('./router/author');
+
 async function initApp() {
   const app = new Koa();
   qs(app);
-  
-  app.use(bodyparser())
+
+  app.use(serve(config.static));
 
   const db = new DBHelper(config.database);
 
@@ -24,7 +25,7 @@ async function initApp() {
   app.use(authorRouter.routes());
   app.use(authorRouter.allowedMethods());
 
-  const bookController = new BookController(db);
+  const bookController = new BookController(db, config.static);
   await bookController.initTable();
   
   const bookRouter = BookRouter(bookController);

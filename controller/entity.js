@@ -24,7 +24,7 @@ class EntityController {
     const [row, ] = await connection.execute(query, values);
     connection.release();
     if (row && row.affectedRows)
-      return true;
+      return row.insertId;
     else
       return false;
   }

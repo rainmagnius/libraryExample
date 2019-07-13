@@ -21,9 +21,10 @@ class DBHelper {
     const insert = [];
     const values = [];
     for (let [field, value ] of Object.entries(params)) {
-      if (fields.includes(field))
+      if (fields.includes(field)) {
         insert.push(field);
         values.push(value);
+      }
     }
     if (insert.length > 0) {
       let sql = `INSERT INTO ${table} (${insert.join(',')}) `;
@@ -75,7 +76,6 @@ class DBHelper {
    * @memberof DBHelper
    */
   buildSelect({ table, allowedWhere, allowedSort, orderBy = { id: "ASC" }, limit = 100, offset = 0, ...filters } = {}){
-    console.log(filters);
     let query = `SELECT * FROM ${table} `;
     const { where, values } = this.buildWhere(allowedWhere, filters);
     query += where;
@@ -100,9 +100,10 @@ class DBHelper {
     const set = [];
     const values = [];
     for (let [param, value] of Object.entries(params)) {
-      if (fields.includes(param))
+      if (fields.includes(param)) {
         set.push(`${param} = ?`);
         values.push(value);
+      }
     }
     if (set.length > 0) {
       const query = `UPDATE ${table} SET ${set.join(', ')} WHERE id = ?;`;

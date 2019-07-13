@@ -13,11 +13,13 @@
   "author": "Constantine Timerkhanov",
   "license": "ISC",
   "dependencies": {
+    "@koa/multer": "^2.0.0",
     "@koa/router": "^8.0.0",
     "config": "^3.1.0",
     "koa": "^2.7.0",
-    "koa-body": "^4.1.0",
     "koa-qs": "^2.0.0",
+    "koa-static": "^5.0.0",
+    "multer": "^1.4.1",
     "mysql2": "^1.6.5"
   }
 }
