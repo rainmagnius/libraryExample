@@ -10,6 +10,11 @@
     "port": 3306
   },
 
+  "cache": {
+    "cacheFolder": "./cache",
+    "ttl": 60000
+  },
+
   "tmp": "./tmp",
   "static": "./uploads"
 }

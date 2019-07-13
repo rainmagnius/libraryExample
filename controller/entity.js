@@ -33,7 +33,6 @@ class EntityController {
     const { query, values } = this.db.buildUpdate(this.table, this.fields, params)
     if (values.length === 0) return 0;
     const connection = await this.db.getConnection();
-    console.log(query, values, id);
     const [row, ] = await connection.execute(query, [...values, id]);
     connection.release();
     if (row && row.affectedRows)

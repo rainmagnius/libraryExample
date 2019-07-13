@@ -2,6 +2,7 @@
 
 const Router = require('@koa/router');
 const multer = require('@koa/multer');
+const Cache = require('../middleware/cache');
 const config = require('config');
 
 function bookRouter(controller) {
@@ -11,24 +12,30 @@ function bookRouter(controller) {
       cb(null, file.mimetype.startsWith('image/'));
     },
   });
+  const cache = new Cache(config.cache);
+  const cachePrefix = 'book';
 
-  router.get('/', async (ctx) => {
-    ctx.body = await controller.getRows({ params: ctx.query });
-  });
+  router.get('/',
+    cache.middleware(cachePrefix, ['id', 'title', 'date', 'author_id', 'description', 'order', 'limit', 'offset']),
+    async (ctx) => {
+      ctx.body = await controller.getRows({ params: ctx.query });
+    }
+  );
 
   router.post('/', upload.single('image'), async (ctx) => {
     const params = { ...ctx.request.body };
     if (ctx.request.file) params.image = ctx.request.file
-    ctx.body = await controller.addRow({ params });
+    const result = await controller.addRow({ params });
+    if (result) cache.clearCache(cachePrefix);
+    ctx.body = result;
   });
 
   router.patch('/:id', upload.single('image'), async (ctx) => {
     const params = { ...ctx.request.body };
     if (ctx.request.file) params.image = ctx.request.file
-    ctx.body = await controller.editRow({
-      params,
-      id: ctx.params.id,
-    });
+    const result = await controller.editRow({ params, id: ctx.params.id });
+    if (result) cache.clearCache(cachePrefix);
+    ctx.body = result;
   });
 
   return router;
