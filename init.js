@@ -28,7 +28,7 @@ const authors = [['Neal', 'Stephenson'], ['Ray', 'Bradbury'], ['Philip', 'Dick']
 const firstnames = ['Sierra', 'Margeret', 'Tommy', 'Tanja', 'Shawnee', 'Herminia', 'Lorraine', 'Jamar', 'Ann', 'Kirk'];
 const lastnames = ['Champagne', 'Ballard', 'Haugland', 'Bird', 'Desjardin', 'Drake', 'Gauthier', 'Kurek', 'Broman', 'Mantilla'];
 
-const books = [
+let books = [
   ['Snow Crash', '1992-06-01', 1, 'History about Hiro Protagonist who fight with virus that’s striking down hackers everywhere.', '/uploads/snowcrash.jpg'],
   ['Fahrenheit 451', '1953-10-19', 2, 'Guy Montag is a fireman. His job is to destroy the printed book, along with the houses in which they are hidden.', '/uploads/fahrenheit.jpg'],
   ['Do Androids Dream of Electric Sheep?', '1968-01-01', 3, `Rick Deckard is an officially sanctioned bounty hunter tasked to find six rogue androids. They're machines, but look, sound, and think like humans`, '/uploads/dadoes.jpg'],
@@ -90,6 +90,8 @@ async function main() {
 
   await connection.query(`INSERT INTO author (firstname, lastname) VALUES ?;`, [authors]);
 
+  await connection.query(`INSERT INTO book (title, date, author_id, description, image) VALUES ?;`, [books]);
+  books = [];
   for (let i = 0; i < 100000; i++) {
     books.push([
       getRandomValueFromArray(titles),

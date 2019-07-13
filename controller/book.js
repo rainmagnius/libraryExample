@@ -52,7 +52,7 @@ class BookController extends EntityController {
     paramsObj.image = newFilePath;
 
     const { query, values } = this.db.buildInsert(this.table, this.fields, paramsObj);
-    if (values.length === 0 ) return false;
+    if (values.length === 0 ) return 0;
     let connection;
     try {
       connection = await this.db.getConnection();
@@ -67,7 +67,7 @@ class BookController extends EntityController {
         fs.unlink(tmpFilePath, () => {});
         await connection.query('ROLLBACK;');
         connection.release();
-        return false;
+        return 0;
       }
     } catch (err) {
       console.error(err);
@@ -77,12 +77,12 @@ class BookController extends EntityController {
         await connection.query('ROLLBACK;');
         connection.release();
       }
-      return false;
+      return 0;
     }
   }
 
   async editRow({ id, params }) {
-    if (!params.image) return super.editRow({ params });    
+    if (!params.image) return super.editRow({ id, params });    
     
     const tmpFilePath = params.image.path;
     const ext = path.extname(params.image.originalname);
@@ -91,7 +91,7 @@ class BookController extends EntityController {
     paramsObj.image = newFilePath;
 
     const { query, values } = this.db.buildUpdate(this.table, this.fields, paramsObj);
-    if (values.length === 0 ) return false;
+    if (values.length === 0 ) return 0;
     let connection;
     try {
       connection = await this.db.getConnection();
@@ -100,7 +100,7 @@ class BookController extends EntityController {
       if (!old || !old[0]) {
         await connection.query('COMMIT;');
         connection.release();
-        return false;
+        return 0;
       }
       const [row, ] = await connection.execute(query, [...values, id]);
       if (row && row.affectedRows) {
@@ -108,12 +108,12 @@ class BookController extends EntityController {
         await connection.query('COMMIT;');
         connection.release();
         if (old[0].image) fs.unlink(old[0].image, () => {});
-        return true;
+        return 1;
       } else {
         fs.unlink(tmpFilePath, () => {});
         await connection.query('ROLLBACK;');
         connection.release();
-        return false;
+        return 0;
       }
     } catch (err) {
       console.error(err);
@@ -123,7 +123,7 @@ class BookController extends EntityController {
         await connection.query('ROLLBACK;');
         connection.release();
       }
-      return false;
+      return 0;
     }
   }
 

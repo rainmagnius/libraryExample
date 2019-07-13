@@ -19,26 +19,27 @@ class EntityController {
 
   async addRow({ params }) {
     const { query, values } = this.db.buildInsert(this.table, this.fields, params);
-    if (values.length === 0 ) return false;    
+    if (values.length === 0 ) return 0;    
     const connection = await this.db.getConnection();
     const [row, ] = await connection.execute(query, values);
     connection.release();
     if (row && row.affectedRows)
       return row.insertId;
     else
-      return false;
+      return 0;
   }
 
   async editRow({ id, params }) {
     const { query, values } = this.db.buildUpdate(this.table, this.fields, params)
-    if (values.length === 0) return false;
+    if (values.length === 0) return 0;
     const connection = await this.db.getConnection();
+    console.log(query, values, id);
     const [row, ] = await connection.execute(query, [...values, id]);
     connection.release();
     if (row && row.affectedRows)
-      return true;
+      return 1;
     else
-      return false;
+      return 0;
   }
 
   async getRows({ params }) {

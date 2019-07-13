@@ -17,13 +17,17 @@ function bookRouter(controller) {
   });
 
   router.post('/', upload.single('image'), async (ctx) => {
-    ctx.body = await controller.addRow({ params: { image: ctx.request.file, ...ctx.request.body } });
+    const params = { ...ctx.request.body };
+    if (ctx.request.file) params.image = ctx.request.file
+    ctx.body = await controller.addRow({ params });
   });
 
   router.patch('/:id', upload.single('image'), async (ctx) => {
+    const params = { ...ctx.request.body };
+    if (ctx.request.file) params.image = ctx.request.file
     ctx.body = await controller.editRow({
+      params,
       id: ctx.params.id,
-      params: { image: ctx.request.file, ...ctx.request.body },
     });
   });
 

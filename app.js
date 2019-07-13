@@ -9,11 +9,13 @@ const AuthorController = require('./controller/author');
 const BookController = require('./controller/book');
 const BookRouter = require('./router/book');
 const AuthorRouter = require('./router/author');
+const errorMiddleware = require('./middleware/error');
 
 async function initApp() {
   const app = new Koa();
   qs(app);
 
+  app.use(errorMiddleware());
   app.use(serve(config.static));
 
   const db = new DBHelper(config.database);
