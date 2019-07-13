@@ -12,7 +12,7 @@ function authorRouter(controller) {
   const cachePrefix = 'author';
 
   router.get('/', 
-    cache.middleware(cachePrefix, ['id', 'firstname', 'secondname', 'order', 'limit', 'offset']),
+    cache.middleware(cachePrefix, ['id', 'firstname', 'lastname', 'order', 'limit', 'offset']),
     async (ctx) => {
       ctx.body = await controller.getRows({ params: ctx.query});
     }
