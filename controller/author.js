@@ -7,10 +7,11 @@ class AuthorController extends EntityController {
     super(dbmanager);
     this.db = dbmanager;
     this.table = 'author';
-    this.sortBy = ['id', 'name'];
-    this.fields = ['name'];
+    this.fields = ['firstname', 'lastname'];
+    this.sortBy = ['id', 'firstname', 'lastname'];
     this.whereBy = {
-      name: { like: 'LIKE' },
+      firstname: { like: 'LIKE' },
+      lastname: { like: 'LIKE' },
       id: {
         gt: '>',
         gte: '>=',
@@ -25,7 +26,8 @@ class AuthorController extends EntityController {
     const tableDefinition = 
     `CREATE TABLE IF NOT EXISTS author (
       id INT AUTO_INCREMENT,
-      name VARCHAR(255) NOT NULL,
+      firstname VARCHAR(255) NOT NULL,
+      lastname VARCHAR(255) NOT NULL,
       PRIMARY KEY (id)
     );`;
     await super.initTable(tableDefinition);

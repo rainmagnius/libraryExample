@@ -14,7 +14,7 @@ class BookController extends EntityController {
       fs.mkdirSync(fileFolder);
     this.table = 'book';
     this.fields = ['title', 'date', 'author_id', 'description', 'image'];
-    this.sortBy = ['id', 'title', 'description', 'author_id'];
+    this.sortBy = ['id', 'title', 'date', 'author_id', 'description'];
     this.whereBy = {
       title: { like: 'LIKE' },
       description: { like: 'LIKE' },

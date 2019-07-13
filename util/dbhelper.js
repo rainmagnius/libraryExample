@@ -75,12 +75,12 @@ class DBHelper {
    * @returns {object}
    * @memberof DBHelper
    */
-  buildSelect({ table, allowedWhere, allowedSort, orderBy = { id: "ASC" }, limit = 100, offset = 0, ...filters } = {}){
+  buildSelect({ table, allowedWhere, allowedSort, order = { id: "ASC" }, limit = 100, offset = 0, ...filters } = {}){
     let query = `SELECT * FROM ${table} `;
     const { where, values } = this.buildWhere(allowedWhere, filters);
     query += where;
-    const order = this.buildOrder(allowedSort, orderBy);
-    query += order;
+    const orderBy = this.buildOrder(allowedSort, order);
+    query += orderBy;
     query += 'LIMIT ? OFFSET ?;';
     return { query, values: [...values, limit, offset] };
   }

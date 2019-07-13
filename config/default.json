@@ -5,7 +5,9 @@
   "database": {
     "user": "root",
     "password": "",
-    "database": "library"
+    "database": "testdbSDGj_library",
+    "host": "localhost",
+    "port": 3306
   },
 
   "tmp": "./tmp",
